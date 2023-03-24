@@ -2,6 +2,7 @@ package com.guptha.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,7 @@ public class Student {
 	private String studentContactNumber;
 	private String studentEmail;
 	private int deptId;
+	
+	@Transient
+	private Department department;
 }

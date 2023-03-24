@@ -1,4 +1,4 @@
-package com.guptha.entities;
+package com.guptha.entities.dept;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
