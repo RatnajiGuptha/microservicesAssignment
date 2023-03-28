@@ -8,20 +8,37 @@ spring:
            - Path=/getAll
          filters:
            - AuthenticationFilter
-
+           
+       - id: department-service
+         uri: lb://department-service
+         predicates:
+           - Path=/getDeptById/**
+         filters:
+           - AuthenticationFilter 
+       
+       - id: department-service
+         uri: lb://department-service
+         predicates:
+           - Path=/addDept
+         filters:
+           - AuthenticationFilter  
+        
+       
+       - id: department-service
+         uri: lb://department-service
+         predicates:
+           - Path=/deleteDept/**
+         filters:
+           - AuthenticationFilter  
+           
+           
        - id: student-service
          uri: lb://student-service
          predicates:
-           - Path=/getByDeptId/**
+           - Path=/getStudentsById/**
          filters:
            - AuthenticationFilter
-
-       - id: student-service
-         uri: lb://student-service
-         predicates:
-           - Path=/getAllStudents
-         filters:
-           - AuthenticationFilter
+           
            
        - id: student-service
          uri: lb://student-service
@@ -30,14 +47,35 @@ spring:
          filters:
            - AuthenticationFilter
            
+           
+       - id: student-service
+         uri: lb://student-service
+         predicates:
+           - Path=/getAllStudents
+         filters:
+           - AuthenticationFilter
+           
+           
        - id: student-service
          uri: lb://student-service
          predicates:
            - Path=/getAllStudentsByDept/**
          filters:
            - AuthenticationFilter
-           
-       - id: jwt-security
-         uri: lb://jwt-security
+        
+       - id: student-service
+         uri: lb://student-service
          predicates:
-           - Path=/login
+           - Path=/addStudent
+         filters:
+           - AuthenticationFilter
+        
+       - id: student-service
+         uri: lb://student-service
+         predicates:
+           - Path=/deleteStudentById/**
+         filters:
+           - AuthenticationFilter
+       
+           
+    

@@ -11,7 +11,7 @@ import com.guptha.entities.Department;
 @FeignClient(name = "department-service", url = "http://localhost:8100")
 public interface DepartmentClient {
 
-	@GetMapping("/deptById/{id}")
+	@GetMapping("/getDeptById/{id}")
 	public Department getDepartment(@PathVariable int id);
 
 	@GetMapping("/getAll")

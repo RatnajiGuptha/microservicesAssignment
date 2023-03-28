@@ -12,4 +12,6 @@ public interface StudentsRepo extends JpaRepository<Student, Integer>{
 
 	Student findByStudentId(int id);
 
+	void deleteByStudentId(int id);
+
 }
