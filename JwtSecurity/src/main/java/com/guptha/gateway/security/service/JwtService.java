@@ -43,4 +43,8 @@ public class JwtService {
 		final Claims claims = Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
 		return claims.getSubject();
 	}
+
+	public void validateJwtToken(String token) {
+		Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
+	}
 }

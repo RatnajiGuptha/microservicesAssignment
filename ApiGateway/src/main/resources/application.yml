@@ -1,0 +1,43 @@
+spring:
+ cloud:
+   gateway:
+     routes:
+       - id: department-service
+         uri: lb://department-service
+         predicates:
+           - Path=/getAll
+         filters:
+           - AuthenticationFilter
+
+       - id: student-service
+         uri: lb://student-service
+         predicates:
+           - Path=/getByDeptId/**
+         filters:
+           - AuthenticationFilter
+
+       - id: student-service
+         uri: lb://student-service
+         predicates:
+           - Path=/getAllStudents
+         filters:
+           - AuthenticationFilter
+           
+       - id: student-service
+         uri: lb://student-service
+         predicates:
+           - Path=/getAllDepartments
+         filters:
+           - AuthenticationFilter
+           
+       - id: student-service
+         uri: lb://student-service
+         predicates:
+           - Path=/getAllStudentsByDept/**
+         filters:
+           - AuthenticationFilter
+           
+       - id: jwt-security
+         uri: lb://jwt-security
+         predicates:
+           - Path=/login
