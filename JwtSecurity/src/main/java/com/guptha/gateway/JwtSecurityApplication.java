@@ -5,15 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
 @SpringBootApplication
-public class ApiGatewayApplication {
+public class JwtSecurityApplication {
 
-	private static final Logger logger = LoggerFactory.getLogger(ApiGatewayApplication.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JwtSecurityApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiGatewayApplication.class, args);
-		logger.info("Api gateway server is running on port : 8888");
+		SpringApplication.run(JwtSecurityApplication.class, args);
+		LOGGER.info("Gateway server is running on port : 8000");
 	}
 
 }

@@ -77,5 +77,15 @@ spring:
          filters:
            - AuthenticationFilter
        
+       - id: jwt-security
+         uri: lb://jwt-security
+         predicates:
+           - Path=/addUser
+           
+       - id: jwt-security
+         uri: lb://jwt-security
+         predicates:
+           - Path=/login
+       
            
     

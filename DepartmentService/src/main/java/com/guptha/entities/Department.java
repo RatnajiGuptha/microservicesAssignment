@@ -1,4 +1,4 @@
-package com.guptha.entities.dept;
+package com.guptha.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -2,6 +2,8 @@ package com.guptha.gateway.controller;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,11 +22,13 @@ import com.guptha.gateway.models.JwtRequest;
 import com.guptha.gateway.models.JwtResponse;
 import com.guptha.gateway.models.UserInfo;
 import com.guptha.gateway.repos.UserInfoRepository;
-import com.guptha.gateway.security.service.JwtService;
-import com.guptha.gateway.security.service.UserInfoUserDetailsService;
+import com.guptha.gateway.security.JwtService;
+import com.guptha.gateway.security.UserInfoUserDetailsService;
 
 @RestController
 public class UserController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private JwtService jwtService;
@@ -47,14 +51,16 @@ public class UserController {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
 		} catch (UsernameNotFoundException e) {
+			LOGGER.error("User not found", e);
 			return ResponseEntity.badRequest().body("User not found");
 		} catch (BadCredentialsException e) {
+			LOGGER.error("Bad Credentials", e);
 			return ResponseEntity.badRequest().body("Bad Credential");
 		}
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
 		String token = this.jwtService.generateToken(userDetails.getUsername());
-		System.err.println(token);
+		LOGGER.info("Token generated for user {}", userDetails.getUsername());
 		return ResponseEntity.ok(new JwtResponse(token));
 
 	}
@@ -62,6 +68,7 @@ public class UserController {
 	@GetMapping("/validateToken")
 	public String ValidateJwtToken(@RequestParam String token) {
 		jwtService.validateJwtToken(token);
+		LOGGER.info("Validating token: {}", token);
 		return "Token is valid";
 	}
 
@@ -69,13 +76,20 @@ public class UserController {
 	public ResponseEntity<?> addUser(@RequestBody UserInfo u) {
 		Optional<UserInfo> name = repo.findByName(u.getName());
 		if (!name.isEmpty()) {
+			LOGGER.error("User already exists with name {}", u.getName());
 			return ResponseEntity.badRequest().body("User already Exists");
 		}
 		u.setRoles("ROLE_USER");
 		u.setPassword(encoder.encode(u.getPassword()));
 		repo.save(u);
+		LOGGER.info("User added successfully with name {}", u.getName());
 		return ResponseEntity.ok("User added sucessfully");
 
+	}
+
+	@GetMapping("hello")
+	public String hello() {
+		return "hello";
 	}
 
 }

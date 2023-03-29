@@ -1,4 +1,4 @@
-package com.guptha.gateway.filter;
+package com.guptha.gateway.security;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RouterValidator {
 
-	public static final List<String> openApiEndPoints = List.of("/login","/addUser");
+	public static final List<String> openApiEndPoints = List.of("/login", "/addUser");
 
 	public Predicate<ServerHttpRequest> isSecured = request -> openApiEndPoints.stream()
 			.noneMatch(uri -> request.getURI().getPath().contains(uri));

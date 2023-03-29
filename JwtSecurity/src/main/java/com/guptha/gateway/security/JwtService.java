@@ -1,20 +1,24 @@
-package com.guptha.gateway.security.service;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+package com.guptha.gateway.security;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+
 @Component
 public class JwtService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(JwtService.class);
 
 	public static final long JWT_TOKEN_VALIDITY = 1 * 60 * 60;
 
@@ -36,6 +40,7 @@ public class JwtService {
 		String username = getUsernameFromToken(token);
 		Claims claims = Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
 		Boolean isTokenExpired = claims.getExpiration().before(new Date());
+		LOGGER.debug("Token is expired: {}", isTokenExpired);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired);
 	}
 

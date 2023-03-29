@@ -1,5 +1,7 @@
-package com.guptha.gateway.security.config;
+package com.guptha.gateway.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,14 +19,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.guptha.gateway.security.JwtAuthenticationEntryPoint;
-import com.guptha.gateway.security.filter.JwtAuthFilter;
-import com.guptha.gateway.security.service.UserInfoUserDetailsService;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class);
 
 	@Autowired
 	private JwtAuthFilter authFilter;
@@ -39,9 +39,11 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.csrf().disable().authorizeHttpRequests().requestMatchers("/login").permitAll().anyRequest()
-				.authenticated().and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		LOGGER.info("Configuring security filter chain...");
+		return http.csrf().disable().authorizeHttpRequests().requestMatchers("/login", "/addUser").permitAll()
+				.anyRequest().authenticated().and().exceptionHandling()
+				.authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
@@ -61,6 +63,7 @@ public class SecurityConfig {
 
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		LOGGER.info("Creating authentication manager...");
 		return config.getAuthenticationManager();
 	}
 

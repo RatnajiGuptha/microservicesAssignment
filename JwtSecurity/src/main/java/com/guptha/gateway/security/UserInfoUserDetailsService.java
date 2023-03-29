@@ -1,4 +1,4 @@
-package com.guptha.gateway.security.service;
+package com.guptha.gateway.security;
 
 import java.util.Optional;
 
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.guptha.gateway.models.UserInfo;
 import com.guptha.gateway.repos.UserInfoRepository;
-import com.guptha.gateway.security.config.UserInfoUserDetails;
 
 @Component
 public class UserInfoUserDetailsService implements UserDetailsService {

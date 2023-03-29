@@ -2,7 +2,9 @@ package com.guptha.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.guptha.entities.dept.Department;
+import com.guptha.entities.Department;
+
+import jakarta.transaction.Transactional;
 
 public interface DepartmentRepo extends JpaRepository<Department, Integer> {
 
@@ -10,6 +12,7 @@ public interface DepartmentRepo extends JpaRepository<Department, Integer> {
 
 	Department findByDeptName(String deptName);
 
+	@Transactional
 	void deleteByDeptId(int id);
 
 }

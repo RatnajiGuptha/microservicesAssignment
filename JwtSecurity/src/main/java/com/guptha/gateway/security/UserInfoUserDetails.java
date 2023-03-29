@@ -1,4 +1,4 @@
-package com.guptha.gateway.security.config;
+package com.guptha.gateway.security;
 
 import java.util.Arrays;
 import java.util.Collection;
