@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+
 	@Autowired
 	private RouterValidator validator;
 
@@ -28,6 +29,10 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
 	public AuthenticationFilter() {
 		super(Config.class);
+	}
+
+	public static class Config {
+
 	}
 
 	@Override
@@ -45,6 +50,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 				if (authHeader != null && authHeader.startsWith("Bearer ")) {
 					authHeader = authHeader.substring(7);
 				}
+				
 				if (jwtUtil.validateJwtToken(authHeader)) {
 //					return chain.filter(exchange);
 					logger.info("Token validate sucessfully");
@@ -70,7 +76,4 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 		return Mono.just(ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage()));
 	}
 
-	public static class Config {
-
-	}
 }

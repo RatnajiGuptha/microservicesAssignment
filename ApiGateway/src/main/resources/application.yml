@@ -1,91 +1,96 @@
 spring:
- cloud:
-   gateway:
-     routes:
-       - id: department-service
-         uri: lb://department-service
-         predicates:
-           - Path=/getAll
-         filters:
-           - AuthenticationFilter
-           
-       - id: department-service
-         uri: lb://department-service
-         predicates:
-           - Path=/getDeptById/**
-         filters:
-           - AuthenticationFilter 
-       
-       - id: department-service
-         uri: lb://department-service
-         predicates:
-           - Path=/addDept
-         filters:
-           - AuthenticationFilter  
+  cloud:
+    gateway:
+      routes:
+      - id: jwt-security
+        uri: http://localhost:8000/
+        predicates:
+        - Method=POST
+        - Path=/login
         
-       
-       - id: department-service
-         uri: lb://department-service
-         predicates:
-           - Path=/deleteDept/**
-         filters:
-           - AuthenticationFilter  
-           
-           
-       - id: student-service
-         uri: lb://student-service
-         predicates:
-           - Path=/getStudentsById/**
-         filters:
-           - AuthenticationFilter
-           
-           
-       - id: student-service
-         uri: lb://student-service
-         predicates:
-           - Path=/getAllDepartments
-         filters:
-           - AuthenticationFilter
-           
-           
-       - id: student-service
-         uri: lb://student-service
-         predicates:
-           - Path=/getAllStudents
-         filters:
-           - AuthenticationFilter
-           
-           
-       - id: student-service
-         uri: lb://student-service
-         predicates:
-           - Path=/getAllStudentsByDept/**
-         filters:
-           - AuthenticationFilter
+      - id: jwt-security
+        uri: http://localhost:8000/
+        predicates:
+        - Method=POST
+        - Path=/addUser
         
-       - id: student-service
-         uri: lb://student-service
-         predicates:
-           - Path=/addStudent
-         filters:
-           - AuthenticationFilter
+      - id: department-service
+        uri: http://localhost:8100/
+        predicates:
+        - Method=POST
+        - Path=/addDept
+        filters:
+        - AuthenticationFilter
         
-       - id: student-service
-         uri: lb://student-service
-         predicates:
-           - Path=/deleteStudentById/**
-         filters:
-           - AuthenticationFilter
+      - id: department-service
+        uri: http://localhost:8100/
+        predicates:
+        - Method=GET
+        - Path=/getAll
+        filters:
+        - AuthenticationFilter
+          
+      - id: department-service
+        uri: http://localhost:8100/
+        predicates:
+        - Method=GET
+        - Path=/getDeptById/**
+        filters:
+        - AuthenticationFilter
+        
+      - id: department-service
+        uri: http://localhost:8100/
+        predicates:
+        - Method=DELETE
+        - Path=/deleteDept/**
+        filters:
+        - AuthenticationFilter
+        
+      - id: student-service
+        uri: http://localhost:8200/
+        predicates:
+        - Method=DELETE
+        - Path=/deleteStudentById/**
+        filters:
+        - AuthenticationFilter
+        
+      - id: student-service
+        uri: http://localhost:8200/
+        predicates:
+        - Method=GET
+        - Path=/getAllStudents
+        filters:
+        - AuthenticationFilter
        
-       - id: jwt-security
-         uri: lb://jwt-security
-         predicates:
-           - Path=/addUser
-           
-       - id: jwt-security
-         uri: lb://jwt-security
-         predicates:
-           - Path=/login
+      - id: student-service
+        uri: http://localhost:8200/
+        predicates:
+        - Method=GET
+        - Path=/getAllStudentsByDept/**
+        filters:
+        - AuthenticationFilter
+        
+      - id: student-service
+        uri: http://localhost:8200/
+        predicates:
+        - Method=GET
+        - Path=/getAllDepartments
+        filters:
+        - AuthenticationFilter
+        
+      - id: student-service
+        uri: http://localhost:8200/
+        predicates:
+        - Method=GET
+        - Path=/getStudentsById/**
+        filters:
+        - AuthenticationFilter
        
-           
-    
+      - id: student-service
+        uri: http://localhost:8200/
+        predicates:
+        - Method=POST
+        - Path=/addStudent
+        filters:
+        - AuthenticationFilter
+        

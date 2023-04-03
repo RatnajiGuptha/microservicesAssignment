@@ -53,7 +53,7 @@ public class StudentController {
 		return students;
 	}
 
-	@GetMapping("getAllDepartments")
+	@GetMapping("/getAllDepartments")
 	public List<Department> getAllDepartments() {
 		LOGGER.info("Retrieving all departments from the department service.");
 		return dept.getAllDepartments();

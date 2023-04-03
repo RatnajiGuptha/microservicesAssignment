@@ -1,5 +1,6 @@
 package com.guptha.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.guptha.entities.Department;
 import com.guptha.repo.DepartmentRepo;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 public class DepartmentController {
 
@@ -24,9 +27,16 @@ public class DepartmentController {
 	DepartmentRepo deptRepo;
 
 	@GetMapping("/getAll")
+	@CircuitBreaker(name = "departmentService", fallbackMethod = "serverDown")
 	public List<Department> getAllDepartments() {
 		LOGGER.info("Getting all departments");
 		return deptRepo.findAll();
+	}
+
+	public List<Department> serverDown(Exception e) {
+		LOGGER.error("Fallback method invoked: " + e.getMessage());
+		return new ArrayList<>();
+
 	}
 
 	@GetMapping("/getDeptById/{id}")
