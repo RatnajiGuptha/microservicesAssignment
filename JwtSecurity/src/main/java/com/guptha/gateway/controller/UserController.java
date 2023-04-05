@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.guptha.gateway.models.JwtRequest;
@@ -63,13 +62,6 @@ public class UserController {
 		LOGGER.info("Token generated for user {}", userDetails.getUsername());
 		return ResponseEntity.ok(new JwtResponse(token));
 
-	}
-
-	@GetMapping("/validateToken")
-	public String ValidateJwtToken(@RequestParam String token) {
-		jwtService.validateJwtToken(token);
-		LOGGER.info("Validating token: {}", token);
-		return "Token is valid";
 	}
 
 	@PostMapping("/addUser")

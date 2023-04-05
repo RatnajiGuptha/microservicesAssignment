@@ -27,16 +27,14 @@ public class DepartmentController {
 	DepartmentRepo deptRepo;
 
 	@GetMapping("/getAll")
-	@CircuitBreaker(name = "departmentService", fallbackMethod = "serverDown")
+	@CircuitBreaker(name = "departmentService", fallbackMethod = "fallback")
 	public List<Department> getAllDepartments() {
 		LOGGER.info("Getting all departments");
 		return deptRepo.findAll();
 	}
 
-	public List<Department> serverDown(Exception e) {
-		LOGGER.error("Fallback method invoked: " + e.getMessage());
-		return new ArrayList<>();
-
+	public List<Department> fallback(Exception e) {
+		return List.of(null, null, null, null, null);
 	}
 
 	@GetMapping("/getDeptById/{id}")

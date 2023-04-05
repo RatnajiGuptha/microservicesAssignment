@@ -31,14 +31,18 @@ public class JwtService {
 
 	public String generateToken(String userName) {
 		Map<String, Object> claims = new HashMap<>();
-		return Jwts.builder().setClaims(claims).setSubject(userName).setIssuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder().setClaims(claims)
+				.setSubject(userName)
+				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		String username = getUsernameFromToken(token);
-		Claims claims = Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parserBuilder()
+							.setSigningKey(getSignKey())
+							.build().parseClaimsJws(token).getBody();
 		Boolean isTokenExpired = claims.getExpiration().before(new Date());
 		LOGGER.debug("Token is expired: {}", isTokenExpired);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired);
@@ -49,7 +53,4 @@ public class JwtService {
 		return claims.getSubject();
 	}
 
-	public void validateJwtToken(String token) {
-		Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
-	}
 }

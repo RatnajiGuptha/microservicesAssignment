@@ -31,25 +31,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		LOGGER.debug("Checking JWT authentication for {}", request.getRequestURI());
+		LOGGER.info("Checking JWT authentication for {}", request.getRequestURI());
 		String authHeader = request.getHeader("Authorization");
 		String token = null;
 		String username = null;
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 			username = jwtService.getUsernameFromToken(token);
+		} else {
+			LOGGER.error("Token Missing");
 		}
 
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			LOGGER.debug("JWT authentication successful for {}", username);
 			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
 			if (jwtService.validateToken(token, userDetails)) {
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
 						null, userDetails.getAuthorities());
 				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authToken);
+				LOGGER.info("JWT authentication successful for {}", username);
+
 			} else {
-				LOGGER.debug("No JWT token found in request headers");
+				LOGGER.error("No JWT token found in request headers");
 			}
 		}
 		filterChain.doFilter(request, response);

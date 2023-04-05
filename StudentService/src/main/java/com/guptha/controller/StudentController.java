@@ -1,5 +1,6 @@
 package com.guptha.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import com.guptha.entities.Department;
 import com.guptha.entities.Student;
 import com.guptha.repo.StudentsRepo;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 public class StudentController {
 
@@ -30,6 +33,7 @@ public class StudentController {
 	DepartmentClient dept;
 
 	@GetMapping("/getAllStudents")
+	@CircuitBreaker(name = "studentService", fallbackMethod = "fallback")
 	public List<Student> getAll() {
 		LOGGER.info("Retrieving all students from the database.");
 		List<Student> students = repo.findAll();
@@ -42,6 +46,7 @@ public class StudentController {
 	}
 
 	@GetMapping("/getAllStudentsByDept/{id}")
+	@CircuitBreaker(name = "studentService", fallbackMethod = "fallback")
 	public List<Student> getByDept(@PathVariable int id) {
 		LOGGER.info("Retrieving all students by department id {} from the database.", id);
 		List<Student> students = repo.findByDeptId(id);
@@ -54,12 +59,18 @@ public class StudentController {
 	}
 
 	@GetMapping("/getAllDepartments")
+	@CircuitBreaker(name = "studentService", fallbackMethod = "fallback")
 	public List<Department> getAllDepartments() {
 		LOGGER.info("Retrieving all departments from the department service.");
 		return dept.getAllDepartments();
 	}
 
+	public List<Department> fallback(Exception e) {
+		return new ArrayList<>();
+	}
+
 	@GetMapping("/getStudentsById/{id}")
+	@CircuitBreaker(name = "studentService", fallbackMethod = "fallback")
 	public Student getStudent(@PathVariable("id") int id) {
 		LOGGER.info("Retrieving student by id {} from the database.", id);
 		Student student = repo.findById(id).orElse(null);
