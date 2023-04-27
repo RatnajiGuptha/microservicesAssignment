@@ -22,7 +22,7 @@ public class JwtService {
 
 	public static final long JWT_TOKEN_VALIDITY = 1 * 60 * 60;
 
-	private static final String jwtSecret = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";;
+	private static final String jwtSecret = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
 	private Key getSignKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
@@ -31,18 +31,14 @@ public class JwtService {
 
 	public String generateToken(String userName) {
 		Map<String, Object> claims = new HashMap<>();
-		return Jwts.builder().setClaims(claims)
-				.setSubject(userName)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder().setClaims(claims).setSubject(userName).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		String username = getUsernameFromToken(token);
-		Claims claims = Jwts.parserBuilder()
-							.setSigningKey(getSignKey())
-							.build().parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
 		Boolean isTokenExpired = claims.getExpiration().before(new Date());
 		LOGGER.debug("Token is expired: {}", isTokenExpired);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired);
